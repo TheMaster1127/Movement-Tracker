@@ -1,0 +1,153 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Name:
+; Camera object detection
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+#singleinstance force
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+;;;;;;;;;;;;;;;;;;;;;
+Save(s, sn)
+{
+FileDelete, %A_ScriptDir%\%sn%.txt
+FileAppend,
+(
+%s%
+), %A_ScriptDir%\%sn%.txt
+}
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Load(l, sn)
+{
+	global
+Loop, read, %A_ScriptDir%\%sn%.txt
+{
+    StringSplit, LineArray, A_LoopReadLine, %A_Tab%
+    varAHK := LineArray1
+}
+}
+;===================================================;
+Gui, Color, 121212
+Gui, Font, s23
+Gui, Add, Picture, x10 y10 w300 h100, red.png
+Gui, Add, Picture, x10 y150 w360 h740,
+Gui, Add, Text, cWhite x320 y10 w60 h60, (%jjj%)
+Gui, Show, x-550
+GuiControl, Hide, Static1
+
+SetTimer, UpdateText1, 100
+
+Return
+funcFolderCounting()
+{
+global
+
+
+; Set the directory to count folders in
+dir := "C:\Users\The_M\pythonProjectGame one\screenshots"
+
+; Count the number of folders in the directory
+FolderCount := 0
+Loop, %dir%\*.*, 2, 0
+{
+    if A_LoopFileAttrib contains D
+        FolderCount++
+
+
+
+
+; Set the directory to get the latest folder from
+dir := "C:\Users\The_M\pythonProjectGame one\screenshots"
+
+; Get a list of all the folders in the directory
+FileList := ""
+Loop, %dir%\*, 2, 1
+{
+    if A_LoopFileAttrib contains D
+        FileList .= A_LoopFileName "`n"
+}
+
+; Get the latest folder in the directory
+latest_folder := ""
+Loop, Parse, FileList, `n
+{
+    if (A_LoopField > latest_folder)
+        latest_folder := A_LoopField
+}
+
+; Display the latest folder
+;MsgBox, % "The latest folder in " dir " is " latest_folder
+
+
+
+
+
+
+
+
+
+
+latest_folder := latest_folder
+dir := "C:\Users\The_M\pythonProjectGame one\screenshots\" . latest_folder . "\*.jpg"
+file_count := 0
+nnn := 1
+Loop, %dir%
+{
+    file_count := file_count + 1
+    file_path := A_LoopFileFullPath
+
+VarImage%nnn% := file_path
+nnn++
+}
+
+;MsgBox, % "Total files read: " . file_count
+;MsgBox, %VarImage1%`n%VarImage2%`n%VarImage3%
+}
+
+
+funccc()
+{
+ global
+}
+
+UpdateText1:
+FileRead, jjj, folder.txt
+jjj1 := jjj
+Sleep, 100
+FileRead, jjj, folder.txt
+jjj2 := jjj
+if (jjj2 != jjj1)
+{
+
+SetTimer, UpdateText, 200
+}
+GuiControl, Text, Static3, (%jjj%)
+Return
+
+
+
+UpdateText:
+funcFolderCounting()
+SoundBeep, 1000, 100
+SoundBeep, 1000, 100
+Sleep, 5
+SoundBeep, 1000, 100
+Loop, 30
+{
+GuiControl, Show, Static1
+nnn1 := 1
+Loop, %file_count%
+{
+
+VarImage := VarImage%nnn1%
+GuiControl, Text, Static2, %VarImage%
+nnn1++
+Sleep, 100
+}
+Sleep, 10
+}
+GuiControl, Hide, Static1
+SetTimer, UpdateText, Off
+return
